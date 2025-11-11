@@ -11,10 +11,11 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="add workspace">
+    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="decouple tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/health_check.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/health_check.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +125,7 @@
       <updated>1762735684227</updated>
       <workItem from="1762735685753" duration="4552000" />
       <workItem from="1762860832782" duration="226000" />
-      <workItem from="1762861083820" duration="118000" />
+      <workItem from="1762861083820" duration="2082000" />
     </task>
     <task id="LOCAL-00001" summary="add first test">
       <option name="closed" value="true" />
@@ -142,7 +143,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762737534456</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="decouple tests">
+      <option name="closed" value="true" />
+      <created>1762861500838</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1762861500838</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,6 +160,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add first test" />
     <MESSAGE value="add workspace" />
-    <option name="LAST_COMMIT_MESSAGE" value="add workspace" />
+    <MESSAGE value="decouple tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="decouple tests" />
   </component>
 </project>
