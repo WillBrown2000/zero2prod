@@ -58,4 +58,6 @@ sqlx database create
 
 >&2 echo "Database ${APP_DB_NAME} created successfully!"
 
+sqlx migrate add create_subscriptions_table
+sqlx migrate run
 
