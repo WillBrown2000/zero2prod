@@ -10,6 +10,18 @@ tokio = { version = "1.48.0", features = ["rt", "rt-multi-thread", "macros"] }
 reqwest = "0.12.24"
 serde = { version = "1.0.228", features = ["derive"] }
 
+[dependencies.sqlx]
+version ="0.8"
+default-features = false
+features = [
+    "runtime-tokio-rustls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "migrate"
+]
+
 [lib]
 path = "src/lib.rs"
 
