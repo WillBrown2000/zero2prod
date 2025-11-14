@@ -11,14 +11,15 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="fix script">
-      <change afterPath="$PROJECT_DIR$/src/configurations.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/routes/health_check.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/routes/subscriptions.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/startup.rs" afterDir="false" />
+    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="move to new computer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/configurations.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/configurations.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/health_check.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/health_check.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/startup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/startup.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +138,7 @@
       <workItem from="1762735685753" duration="4552000" />
       <workItem from="1762860832782" duration="226000" />
       <workItem from="1762861083820" duration="19592000" />
-      <workItem from="1763081892238" duration="1090000" />
+      <workItem from="1763081892238" duration="6624000" />
     </task>
     <task id="LOCAL-00001" summary="add first test">
       <option name="closed" value="true" />
@@ -211,7 +212,31 @@
       <option name="project" value="LOCAL" />
       <updated>1762950474943</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="move to new computer">
+      <option name="closed" value="true" />
+      <created>1763090843919</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1763090843919</updated>
+    </task>
+    <task id="LOCAL-00011" summary="move to new computer">
+      <option name="closed" value="true" />
+      <created>1763090857997</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1763090857997</updated>
+    </task>
+    <task id="LOCAL-00012" summary="move to new computer">
+      <option name="closed" value="true" />
+      <created>1763090944482</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1763090944482</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,6 +251,7 @@
     <MESSAGE value="fix issues" />
     <MESSAGE value="add migration" />
     <MESSAGE value="fix script" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix script" />
+    <MESSAGE value="move to new computer" />
+    <option name="LAST_COMMIT_MESSAGE" value="move to new computer" />
   </component>
 </project>

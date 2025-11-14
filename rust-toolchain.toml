@@ -1,0 +1,9 @@
+[toolchain]
+# Pin to a stable toolchain and ensure components that provide the Rust standard
+# library sources are available to editors and tools (e.g., RustRover/rust-analyzer).
+channel = "stable"
+components = [
+    "rust-src",   # Provides stdlib sources; fixes "both stdlib and rustup not found" IDE error
+    "rustfmt",
+    "clippy",
+]
