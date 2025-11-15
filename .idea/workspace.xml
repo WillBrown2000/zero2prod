@@ -11,16 +11,17 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="fix no config file">
+    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="connect db">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/configurations.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/configurations.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/init_db.sh" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/health_check.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/health_check.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:test" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -45,6 +46,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Cargo.Run zero2prod.executor": "Run",
+    "Cargo.Test subscribe_returns_a_200_for_valid_form_data.executor": "Run",
     "Cargo.Test zero2prod.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -81,10 +83,27 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Cargo.Run zero2prod">
+  <component name="RunManager" selected="Cargo.Test zero2prod">
     <configuration name="Run zero2prod" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="buildProfileId" value="dev" />
       <option name="command" value="run --package zero2prod --bin zero2prod" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test subscribe_returns_a_200_for_valid_form_data" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package zero2prod --test health_check subscribe_returns_a_200_for_valid_form_data -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
       <option name="emulateTerminal" value="true" />
@@ -118,6 +137,11 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo.Test subscribe_returns_a_200_for_valid_form_data" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -132,7 +156,7 @@
       <workItem from="1762735685753" duration="4552000" />
       <workItem from="1762860832782" duration="226000" />
       <workItem from="1762861083820" duration="19592000" />
-      <workItem from="1763081892238" duration="7346000" />
+      <workItem from="1763081892238" duration="12203000" />
     </task>
     <task id="LOCAL-00001" summary="add first test">
       <option name="closed" value="true" />
@@ -254,7 +278,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763124289955</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="connect db">
+      <option name="closed" value="true" />
+      <created>1763125307972</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1763125307972</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,6 +303,23 @@
     <MESSAGE value="fix script" />
     <MESSAGE value="move to new computer" />
     <MESSAGE value="fix no config file" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix no config file" />
+    <MESSAGE value="connect db" />
+    <option name="LAST_COMMIT_MESSAGE" value="connect db" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/tests/health_check.rs</url>
+          <line>31</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/configurations.rs</url>
+          <line>27</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

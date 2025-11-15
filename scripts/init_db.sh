@@ -13,7 +13,7 @@ fi
 
 # Check if custom parameter has beenset, otherwise use default values
 
-DB_PORT="${POSTGRES_PORT:=5433}"
+DB_PORT="${POSTGRES_PORT:=5432}"
 SUPERUSER="${SUPERUSER:=postgres}"
 SUPERUSER_PWD="${SUPERUSER_PWD:=password}"
 
