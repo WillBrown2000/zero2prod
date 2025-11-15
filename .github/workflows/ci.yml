@@ -33,11 +33,15 @@ jobs:
       DB_USER: postgres
       DB_PASSWORD: password
       DB_NAME: newsletter
-      DATABASE_URL: postgres://${{ env.DB_USER }}:${{ env.DB_PASSWORD }}@${{ env.DB_HOST }}:${{ env.DB_PORT }}/${{ env.DB_NAME }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Compose DATABASE_URL from DB_*
+        shell: bash
+        run: |
+          echo "DATABASE_URL=postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME" >> $GITHUB_ENV
 
       - name: Install Rust (stable)
         uses: dtolnay/rust-toolchain@stable
