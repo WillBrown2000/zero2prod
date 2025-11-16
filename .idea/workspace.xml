@@ -11,7 +11,8 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="lint">
+    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -444,7 +445,23 @@
       <option name="project" value="LOCAL" />
       <updated>1763324050526</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="allow database spin up">
+      <option name="closed" value="true" />
+      <created>1763326211790</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1763326211790</updated>
+    </task>
+    <task id="LOCAL-00038" summary="allow database spin up">
+      <option name="closed" value="true" />
+      <created>1763326216070</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1763326216070</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -471,7 +488,8 @@
     <MESSAGE value="fix tests" />
     <MESSAGE value="add git hooks stuff" />
     <MESSAGE value="lint" />
-    <option name="LAST_COMMIT_MESSAGE" value="lint" />
+    <MESSAGE value="allow database spin up" />
+    <option name="LAST_COMMIT_MESSAGE" value="allow database spin up" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
