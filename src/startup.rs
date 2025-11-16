@@ -10,7 +10,8 @@ pub fn run(tcp_listener: TcpListener, db_pool: PgPool) -> Result<Server, std::io
         App::new()
             .route("/subscriptions", web::post().to(subscribe))
             .route("/health_check", web::get().to(health_check))
-            .app_data(web::Data::new(pool.clone()))
+            // Provide the existing Data<PgPool> to the app; avoid wrapping Data inside Data
+            .app_data(pool.clone())
     })
     .listen(tcp_listener)?
     .run();

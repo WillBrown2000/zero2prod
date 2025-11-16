@@ -7,7 +7,7 @@ use zero2prod::startup::run;
 async fn main() -> Result<(), std::io::Error> {
     // Read configuration (port, db, etc.)
     let configuration = get_configuration().expect("Failed to read configuration.");
-    let pool = PgPool::connect(&configuration.database.get_connection_string()
+    let pool = PgPool::connect(&configuration.database.connection_string()
     ).await
     .expect("Failed to connect to database.");
     // Bind to the configured application port
