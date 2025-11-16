@@ -1,4 +1,3 @@
-use reqwest;
 use sqlx::{Connection, PgConnection};
 use zero2prod::configurations::get_configuration;
 
@@ -7,7 +6,7 @@ async fn test_health_check() {
     let address = spawn_app();
     let client = reqwest::Client::new();
     let response = client
-        .get(&format!("{}/health_check", &address))
+        .get(format!("{}/health_check", &address))
         .send()
         .await
         .unwrap();
@@ -34,7 +33,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     let client = reqwest::Client::new();
 
     let response = client
-        .post(&format!("{}/subscriptions", &app_address))
+        .post(format!("{}/subscriptions", &app_address))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
@@ -62,7 +61,7 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
     ];
     for (invalid_body, error_message) in test_cases {
         let response = client
-            .post(&format!("{}/subscriptions", &app_address))
+            .post(format!("{}/subscriptions", &app_address))
             .header("Content-Type", "application/x-www-form-urlencoded");
 
         assert_eq!(
