@@ -12,7 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="fix tests">
-      <change beforePath="$PROJECT_DIR$/tests/health_check.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/health_check.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +154,7 @@
       <workItem from="1762735685753" duration="4552000" />
       <workItem from="1762860832782" duration="226000" />
       <workItem from="1762861083820" duration="19592000" />
-      <workItem from="1763081892238" duration="27435000" />
+      <workItem from="1763081892238" duration="27889000" />
     </task>
     <task id="LOCAL-00001" summary="add first test">
       <option name="closed" value="true" />
@@ -420,7 +420,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763323018231</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="fix tests">
+      <option name="closed" value="true" />
+      <created>1763323361409</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1763323361409</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

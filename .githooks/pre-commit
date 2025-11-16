@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pre-commit hook: auto-format staged Rust files with rustfmt and re-stage them.
+
+# Find staged Rust files (Added, Copied, Modified, Renamed)
+mapfile -t STAGED_RS < <(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.rs$' || true)
+
+if [ ${#STAGED_RS[@]} -eq 0 ]; then
+  exit 0
+fi
+
+echo "pre-commit: formatting ${#STAGED_RS[@]} Rust file(s) with rustfmt..."
+
+if command -v rustfmt >/dev/null 2>&1; then
+  rustfmt --edition 2021 "${STAGED_RS[@]}"
+else
+  echo "rustfmt not found on PATH; trying cargo fmt for the whole workspace..."
+  cargo fmt --all
+fi
+
+# Re-stage only the files that were staged before formatting
+git add -- "${STAGED_RS[@]}"
+
+echo "pre-commit: formatting complete."
+
+exit 0

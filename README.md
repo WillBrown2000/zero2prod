@@ -139,3 +139,23 @@ Troubleshooting: "unexpected argument '--clippy'"
 - If you previously saw `error: unexpected argument '--clippy' found` when running `cargo fix-lint`, that was because the alias used `cargo fix --clippy`, which is not supported on your Cargo version. The alias has been updated to a stable-safe form; re-run:
   - `cargo fix-lint && cargo fmt-all` (stable)
   - Or use the script/nightly options above for Clippy auto-fixes.
+
+
+Git commit hook: auto-format before commit
+
+Set up a project-scoped Git hook that formats staged Rust files with rustfmt automatically before every commit.
+
+One-time setup per clone:
+
+- chmod +x ./scripts/install_hooks.sh
+- ./scripts/install_hooks.sh
+
+What it does:
+
+- Pre-commit hook formats only the staged .rs files (using rustfmt or cargo fmt) and re-stages them, so your commit contains the formatted code.
+
+Tips:
+
+- Temporarily bypass the hook: git commit --no-verify
+- Remove the custom hooks path: git config --unset core.hooksPath
+- Hooks are stored in .githooks and versioned with the repo.
