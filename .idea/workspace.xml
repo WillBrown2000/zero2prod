@@ -11,11 +11,7 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="fix lint">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-    </list>
+    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="run in parallel" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -156,7 +152,7 @@
       <workItem from="1762735685753" duration="4552000" />
       <workItem from="1762860832782" duration="226000" />
       <workItem from="1762861083820" duration="19592000" />
-      <workItem from="1763081892238" duration="19043000" />
+      <workItem from="1763081892238" duration="19508000" />
     </task>
     <task id="LOCAL-00001" summary="add first test">
       <option name="closed" value="true" />
@@ -366,7 +362,31 @@
       <option name="project" value="LOCAL" />
       <updated>1763304692629</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="run in parallel">
+      <option name="closed" value="true" />
+      <created>1763305233531</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1763305233531</updated>
+    </task>
+    <task id="LOCAL-00028" summary="run in parallel">
+      <option name="closed" value="true" />
+      <created>1763305529975</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1763305529975</updated>
+    </task>
+    <task id="LOCAL-00029" summary="run in parallel">
+      <option name="closed" value="true" />
+      <created>1763305550379</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1763305550379</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -388,7 +408,8 @@
     <MESSAGE value="fix CI pipeline stufff" />
     <MESSAGE value="watch pipeline stuff" />
     <MESSAGE value="fix lint" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix lint" />
+    <MESSAGE value="run in parallel" />
+    <option name="LAST_COMMIT_MESSAGE" value="run in parallel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
