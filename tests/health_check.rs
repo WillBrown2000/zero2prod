@@ -24,7 +24,7 @@ async fn spawn_app() -> TestApp {
     let port = listener.local_addr().unwrap().port();
     let mut configuration = get_configuration().expect("Failed to read configuration.");
     configuration.database.database_name = Uuid::new_v4().to_string();
-    let connection_pool = PgPool::connect(&configuration.database.connection_string()).await.unwrap();
+    let connection_pool = configure_database(&configuration.database).await;
     // Include the scheme to build an absolute URL for reqwest
     let address = format!("http://127.0.0.1:{}", port);
     let pool = PgPool::connect(&configuration.database.connection_string()).await.unwrap();
@@ -51,7 +51,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
 #[tokio::test]
 async fn subscribe_returns_a_200_for_valid_form_data() {
     let app = spawn_app().await;
-    let body = "name=le%20guin&email=ursula_le_guin%40gmal.com";
+    let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
     let client = reqwest::Client::new();
 
     let response = client
