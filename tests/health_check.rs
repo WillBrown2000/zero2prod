@@ -2,7 +2,6 @@ use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
 
-
 pub struct TestApp {
     pub address: String,
     pub pool: PgPool,
@@ -27,8 +26,11 @@ async fn spawn_app() -> TestApp {
     let connection_pool = configure_database(&configuration.database).await;
     // Include the scheme to build an absolute URL for reqwest
     let address = format!("http://127.0.0.1:{}", port);
-    let pool = PgPool::connect(&configuration.database.connection_string()).await.unwrap();
-    let server = zero2prod::startup::run(listener, connection_pool.clone()).expect("failed to start server");
+    let pool = PgPool::connect(&configuration.database.connection_string())
+        .await
+        .unwrap();
+    let server =
+        zero2prod::startup::run(listener, connection_pool.clone()).expect("failed to start server");
     let _ = tokio::spawn(server);
     TestApp { address, pool }
 }
@@ -40,11 +42,20 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         host: config.host.clone(),
         port: config.port,
     };
-    let mut connection = PgConnection::connect(&maintenance_settings.connection_string()).await.expect("Failed to connect to database.");
-    connection.execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str()).await.expect("Failed to create database");
-    let connection_pool = PgPool::connect(&config.connection_string()).await.expect(
-        "Failed to connect to database after creating it.");
-    sqlx::migrate!("./migrations").run(&connection_pool).await.expect("Failed to run migrations.");
+    let mut connection = PgConnection::connect(&maintenance_settings.connection_string())
+        .await
+        .expect("Failed to connect to database.");
+    connection
+        .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
+        .await
+        .expect("Failed to create database");
+    let connection_pool = PgPool::connect(&config.connection_string())
+        .await
+        .expect("Failed to connect to database after creating it.");
+    sqlx::migrate!("./migrations")
+        .run(&connection_pool)
+        .await
+        .expect("Failed to run migrations.");
     connection_pool
 }
 

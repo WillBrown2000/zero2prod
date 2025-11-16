@@ -21,9 +21,14 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
         .join("configuration.yaml");
 
     // Fallback: load from the project root (compiled-in) if not found in CWD
-    let project_root_path: PathBuf = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("configuration.yaml");
+    let project_root_path: PathBuf =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("configuration.yaml");
 
-    let chosen_path = if cwd_path.exists() { cwd_path } else { project_root_path };
+    let chosen_path = if cwd_path.exists() {
+        cwd_path
+    } else {
+        project_root_path
+    };
 
     let builder = config::Config::builder()
         .add_source(config::File::from(chosen_path).format(config::FileFormat::Yaml))
