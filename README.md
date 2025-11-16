@@ -1,4 +1,4 @@
-Zero2Prod – Project Overview and CI Integration
+Zero2Prod – Project Overview, Linting and CI Integration
 
 This repository is configured with a GitHub Actions workflow (.github/workflows/ci.yml) that builds, lints, runs migrations, and tests your project on every push and pull request.
 
@@ -55,3 +55,54 @@ Troubleshooting
 - Database failures in CI
   - This workflow starts a Postgres service in CI and runs migrations with sqlx.
   - Locally, ensure your .env/configuration.yaml settings match what tests expect.
+
+
+Local linting and auto-fix (Rustfmt + Clippy)
+
+You can run lint checks and automatically fix most issues found by Clippy and rustfmt.
+
+- Check only (no changes):
+  - cargo fmt --all -- --check
+  - cargo clippy --all-targets --all-features -D warnings
+
+- Auto-fix (apply safe fixes):
+  - cargo fix --allow-dirty --allow-staged
+  - cargo fmt --all
+
+Convenient script
+
+Use the helper script to run both steps together:
+
+  - ./scripts/lint.sh check   # verify formatting and clippy lints (fails on warnings)
+  - ./scripts/lint.sh fix     # apply clippy fixes and format the code
+
+RustRover IDE
+
+- Rustfmt on save: Preferences/Settings → Languages & Frameworks → Rust → Rustfmt → Format on Save.
+- Run Clippy: Tools → Rust → Run Clippy (or use the Clippy inspection in the Problems tool window). Many quick-fixes are available via Alt+Enter.
+
+Notes about cargo aliases and a common error
+
+- This repo defines Cargo command aliases in .cargo/config.toml (not in Cargo.toml). If you previously saw a warning like:
+  - "warning: unused manifest key: alias" — that is fixed now by moving aliases to the right file.
+
+- To run lints, use the aliases directly, e.g.:
+  - cargo lint
+  - cargo fix-lint && cargo fmt-all
+  Do NOT run "cargo run lint" — that would execute the application binary and pass the word "lint" as an argument to the server.
+
+- If you see: Error: Os { code: 48, kind: AddrInUse, message: "Address already in use" }
+  - It means the configured server port is already taken (or you accidentally started the server instead of running lints).
+  - Close the running server or choose a free port in configuration.yaml, or simply run the correct lint commands above.
+
+Clippy auto-fix notes
+
+- On stable toolchain, `cargo fix-lint` applies compiler suggestion fixes only. To also apply Clippy fixes automatically, use one of the following:
+  - Recommended: `./scripts/lint.sh fix` — detects support and applies Clippy fixes when available, then formats.
+  - If you have nightly installed: `cargo clippy-fix-nightly && cargo fmt-all`.
+
+Troubleshooting: "unexpected argument '--clippy'"
+
+- If you previously saw `error: unexpected argument '--clippy' found` when running `cargo fix-lint`, that was because the alias used `cargo fix --clippy`, which is not supported on your Cargo version. The alias has been updated to a stable-safe form; re-run:
+  - `cargo fix-lint && cargo fmt-all` (stable)
+  - Or use the script/nightly options above for Clippy auto-fixes.

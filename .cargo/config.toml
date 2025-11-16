@@ -1,0 +1,10 @@
+[alias]
+# Lint and formatting helpers (use: cargo lint, cargo fix-lint, etc.)
+lint = "clippy --all-targets --all-features -D warnings"
+fix-lint = "fix --allow-dirty --allow-staged --all-targets --all-features"
+fmt-check = "fmt --all -- --check"
+fmt-all = "fmt --all"
+
+# Optional: use nightly to apply Clippy auto-fixes (requires nightly toolchain)
+# Install nightly once with: rustup toolchain install nightly
+clippy-fix-nightly = "+nightly clippy --fix -Z unstable-options --allow-dirty --allow-staged --all-targets --all-features"
