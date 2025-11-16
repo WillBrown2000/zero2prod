@@ -1,6 +1,6 @@
 Zero2Prod – Project Overview, Linting and CI Integration
 
-This repository is configured with a GitHub Actions workflow (.github/workflows/ci.yml) that builds, lints, runs migrations, and tests your project on every push and pull request.
+This repository is configured with a GitHub Actions workflow (.github/workflows/ci.yml) that builds, lints, runs migrations, and tests your project on every push and pull request. The CI is split into separate jobs (lint, build, test) that run in parallel to speed up feedback.
 
 See online CI builds and failures inside your IDE (RustRover)
 
@@ -17,8 +17,16 @@ Quick setup
    - You should see workflow runs for this repository (name: CI).
 
 3) Inspect failures
-   - Select a run → select a job (build-test-lint) → open the failing step to see full logs and error messages.
-   - You can re-run jobs from the IDE if your permissions allow it.
+  - Select a run → select a job (lint | build | test) → open the failing step to see full logs and error messages.
+  - You can re-run jobs from the IDE if your permissions allow it.
+
+CI workflow overview (parallel jobs)
+
+- lint: Runs rustfmt check and Clippy with -D warnings.
+- build: Builds the project with cargo build.
+- test: Starts Postgres, runs migrations (sqlx), and executes cargo test. This job is isolated from others and can run in parallel with lint/build.
+
+All three jobs run in parallel on GitHub Actions to reduce total CI time. Each job sets up the Rust toolchain and uses build caching to further improve performance.
 
 Alternative: use GitHub CLI from your terminal
 

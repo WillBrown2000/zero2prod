@@ -7,9 +7,46 @@ on:
     branches: [ "**" ]
 
 jobs:
-  build-test-lint:
+  lint:
+    name: Lint (fmt + clippy)
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache cargo registry/build
+        uses: Swatinem/rust-cache@v2
+
+      - name: rustfmt (check)
+        run: cargo fmt --all -- --check
+
+      - name: clippy (deny warnings)
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry/build
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --all --locked
+
+  test:
+    name: Tests (with Postgres)
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:15
@@ -24,7 +61,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
-
     env:
       CARGO_TERM_COLOR: always
       # Match configuration.yaml used by the app/tests
@@ -33,7 +69,6 @@ jobs:
       DB_USER: postgres
       DB_PASSWORD: password
       DB_NAME: newsletter
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,15 +108,6 @@ jobs:
       - name: Run database migrations
         run: |
           sqlx migrate run
-
-      - name: rustfmt (check)
-        run: cargo fmt --all -- --check
-
-      - name: clippy (deny warnings)
-        run: cargo clippy --all-targets --all-features -- -D warnings
-
-      - name: Build
-        run: cargo build --all --locked
 
       - name: Test
         run: cargo test --all --locked -- --nocapture
