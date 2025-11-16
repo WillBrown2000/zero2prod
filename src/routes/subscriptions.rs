@@ -9,7 +9,6 @@ pub struct Subscription {
     pub name: String,
 }
 
-// Minimal subscribe handler; extend later to persist to DB
 pub async fn subscribe(form: Form<Subscription>, pool: web::Data<PgPool>) -> HttpResponse {
     sqlx::query!(
         r#"
@@ -23,6 +22,6 @@ pub async fn subscribe(form: Form<Subscription>, pool: web::Data<PgPool>) -> Htt
     )
     .execute(pool.get_ref())
     .await
-    .expect("can't connect to database");
+    .expect("Failed to execute insert query");
     HttpResponse::Ok().finish()
 }
