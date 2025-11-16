@@ -11,11 +11,7 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="watch pipeline stuff">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-    </list>
+    <list default="true" id="c0c8de2f-7ede-4d38-8efc-89c4794ae3f1" name="Changes" comment="fix lint" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -156,7 +152,7 @@
       <workItem from="1762735685753" duration="4552000" />
       <workItem from="1762860832782" duration="226000" />
       <workItem from="1762861083820" duration="19592000" />
-      <workItem from="1763081892238" duration="16761000" />
+      <workItem from="1763081892238" duration="17505000" />
     </task>
     <task id="LOCAL-00001" summary="add first test">
       <option name="closed" value="true" />
@@ -334,7 +330,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763229879121</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="fix lint">
+      <option name="closed" value="true" />
+      <created>1763303290527</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1763303290527</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -355,7 +359,8 @@
     <MESSAGE value="add CI pipeline stuff" />
     <MESSAGE value="fix CI pipeline stufff" />
     <MESSAGE value="watch pipeline stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="watch pipeline stuff" />
+    <MESSAGE value="fix lint" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix lint" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

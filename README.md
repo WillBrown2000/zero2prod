@@ -68,6 +68,7 @@ You can run lint checks and automatically fix most issues found by Clippy and ru
 - Auto-fix (apply safe fixes):
   - cargo fix --allow-dirty --allow-staged
   - cargo fmt --all
+  - Or use aliases: cargo fmt-all or cargo fmt-fix
 
 Convenient script
 
@@ -75,6 +76,15 @@ Use the helper script to run both steps together:
 
   - ./scripts/lint.sh check   # verify formatting and clippy lints (fails on warnings)
   - ./scripts/lint.sh fix     # apply clippy fixes and format the code
+
+FAQ: “How do I make cargo fmt --all -- --check auto-fix?”
+
+- The -- --check flag tells rustfmt to only verify formatting and exit with a non-zero status if changes are needed. To auto-fix formatting, drop the check flag:
+  - cargo fmt --all
+- Equivalent shortcuts:
+  - cargo fmt-all
+  - cargo fmt-fix
+- Running ./scripts/lint.sh fix will also format the whole workspace after applying lint fixes.
 
 RustRover IDE
 

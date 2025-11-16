@@ -1,7 +1,6 @@
 use reqwest;
-use sqlx::{PgConnection, Connection};
+use sqlx::{Connection, PgConnection};
 use zero2prod::configurations::get_configuration;
-
 
 #[tokio::test]
 async fn test_health_check() {
@@ -29,9 +28,11 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     let body = "name=le%20guin&email=ursula_le_guin%40gmal.com";
     let configuration = get_configuration().expect("Failed to read configuration.");
     let connection_string = configuration.database.get_connection_string();
-    let mut connection = PgConnection::connect(&connection_string).await.expect("Failed to connect to Postgres.");
+    let mut connection = PgConnection::connect(&connection_string)
+        .await
+        .expect("Failed to connect to Postgres.");
     let client = reqwest::Client::new();
-    
+
     let response = client
         .post(&format!("{}/subscriptions", &app_address))
         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -48,7 +49,6 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
 
     assert_eq!(saved.email, "ursula_le_guin@gmail.com");
     assert_eq!(saved.name, "le guin");
-
 }
 
 #[tokio::test]
@@ -65,6 +65,17 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
             .post(&format!("{}/subscriptions", &app_address))
             .header("Content-Type", "application/x-www-form-urlencoded");
 
-        assert_eq!(response.body(invalid_body).send().await.unwrap().status().as_u16(), 400, "The API did not fail with 400 Bad Request when the payload was {}.", error_message);
+        assert_eq!(
+            response
+                .body(invalid_body)
+                .send()
+                .await
+                .unwrap()
+                .status()
+                .as_u16(),
+            400,
+            "The API did not fail with 400 Bad Request when the payload was {}.",
+            error_message
+        );
     }
 }
