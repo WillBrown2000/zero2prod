@@ -31,7 +31,7 @@ async fn spawn_app() -> TestApp {
         .unwrap();
     let server =
         zero2prod::startup::run(listener, connection_pool.clone()).expect("failed to start server");
-    let _ = tokio::spawn(server);
+    tokio::spawn(server);
     TestApp { address, pool }
 }
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
