@@ -69,6 +69,14 @@ Local linting and auto-fix (Rustfmt + Clippy)
 
 You can run lint checks and automatically fix most issues found by Clippy and rustfmt.
 
+- Quick answer: auto-fix Clippy
+
+- If you want Clippy to auto-apply its suggestions, run one of these:
+  - ./scripts/lint.sh fix                     # preferred; tries stable cargo fix, falls back to nightly clippy --fix if available
+  - cargo clippy-fix-nightly && cargo fmt-all # requires: rustup toolchain install nightly
+- On stable only (no nightly):
+  - cargo fix-lint && cargo fmt-all           # applies compiler suggestions; Clippy suggestions are not auto-applied on stable
+
 - Check only (no changes):
   - cargo fmt --all -- --check
   - cargo clippy --all-targets --all-features -D warnings
@@ -84,6 +92,13 @@ Use the helper script to run both steps together:
 
   - ./scripts/lint.sh check   # verify formatting and clippy lints (fails on warnings)
   - ./scripts/lint.sh fix     # apply clippy fixes and format the code
+
+If you see "Permission denied" when running the script, make it executable:
+
+- macOS/Linux:
+  - chmod +x ./scripts/lint.sh
+- Windows (Git Bash or WSL):
+  - chmod +x ./scripts/lint.sh
 
 FAQ: “How do I make cargo fmt --all -- --check auto-fix?”
 
