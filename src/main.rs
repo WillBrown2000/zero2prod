@@ -2,31 +2,22 @@ use sqlx::PgPool;
 use std::net::TcpListener;
 use zero2prod::configuration::get_configuration;
 use zero2prod::startup::run;
-use env_logger::Env;
-use tracing::subscriber::set_global_default;
-use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
-use tracing_subscriber::{EnvFilter, Registry};
-use tracing_subscriber::layer::SubscriberExt;
+use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
-    let formatting_layer = BunyanFormattingLayer::new(
-        "zero2prod".into(),
+    let subscriber = get_subscriber(
+        "zero2prod".to_string(),
+        "info".to_string(),
         std::io::stdout,
     );
-    let subscriber = Registry::default()
-        .with(env_filter)
-        .with(JsonStorageLayer)
-        .with(formatting_layer);
-    set_global_default(subscriber).expect("Failed to set global default subscriber.");
-    // Read configuration (port, db, etc.)
+    init_subscriber(subscriber);
     let configuration = get_configuration().expect("Failed to read configuration.");
     let pool = PgPool::connect(&configuration.database.connection_string())
         .await
         .expect("Failed to connect to database.");
-    // Bind to the configured application port
     let address = format!("127.0.0.1:{}", configuration.application_port);
     let listener = TcpListener::bind(address)?;
     run(listener, pool)?.await
 }
+

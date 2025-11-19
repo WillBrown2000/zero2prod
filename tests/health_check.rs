@@ -1,7 +1,17 @@
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
+use zero2prod::telemetry::{get_subscriber, init_subscriber};
+use std::sync::LazyLock;
 
+static TRACING: LazyLock<()> =  LazyLock::new(|| {
+    let subscriber = get_subscriber(
+        "test".to_string(),
+        "debug".to_string(),
+        std::io::stdout,
+    );
+    init_subscriber(subscriber);
+});
 pub struct TestApp {
     pub address: String,
     pub pool: PgPool,
@@ -19,6 +29,9 @@ async fn test_health_check() {
 }
 
 async fn spawn_app() -> TestApp {
+
+    LazyLock::force(&TRACING);
+
     let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
     let port = listener.local_addr().unwrap().port();
     let mut configuration = get_configuration().expect("Failed to read configuration.");
