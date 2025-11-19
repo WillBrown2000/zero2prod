@@ -7,7 +7,6 @@ use std::sync::LazyLock;
 static TRACING: LazyLock<()> =  LazyLock::new(|| {
     let default_filter_level = "info".to_string();
     let subscriber_name = "test".to_string();
-
     if std::env::var("TEST_LOG").is_ok() {
         let subscriber = get_subscriber(
             default_filter_level,

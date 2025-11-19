@@ -10,15 +10,19 @@ pub struct Subscription {
     pub name: String,
 }
 
-pub async fn subscribe(form: Form<Subscription>, pool: web::Data<PgPool>) -> HttpResponse {
-    let request_id = Uuid::new_v4();
-    let request_span = tracing::info_span!(
-            "Adding a new subscriber.",
-            %request_id,
-            subscriber_email = form.email,
-            subscriber_name = form.name
-        );
-    let _enter = request_span.enter();
+#[tracing::instrument(
+    name = "Adding a new subscriber",
+    skip(form, pool),
+    fields(
+        request_id = %Uuid::new_v4(),
+        subscriber_email = %form.email,
+        subscriber_name = %form.name
+    )
+)]
+pub async fn subscribe(
+    form: Form<Subscription>,
+    pool: web::Data<PgPool>
+) -> HttpResponse {
     let query_span = tracing::info_span!("Received subscription started...");
     match sqlx::query!(
         r#"
@@ -35,14 +39,14 @@ pub async fn subscribe(form: Form<Subscription>, pool: web::Data<PgPool>) -> Htt
         .await
     {
         Ok(_) => {
-            tracing::info!( "request_id {} - Subscription saved successfully.", request_id);
             HttpResponse::Ok().finish()
         },
 
         Err(e) => {
-            tracing::error!("request_id {} Failed to save subscription: {:?}", request_id, e);
+            tracing::error!(" Failed to save subscription: {:?}", e);
             HttpResponse::InternalServerError().body(e.to_string())
         },
     }
 
 }
+
