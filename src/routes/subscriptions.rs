@@ -27,7 +27,7 @@ pub async fn subscribe(
         name: SubscriberName::parse(form.name.clone()),
         email: form.email.clone(),
     };
-    match insert_subscriber(new_subscriber, &pool.get_ref()).await 
+    match insert_subscriber(&new_subscriber, &pool.get_ref()).await
     {
         Ok(_) => {
             HttpResponse::Ok().finish()
@@ -45,7 +45,7 @@ pub async fn subscribe(
     name = "Adding a new subscriber",
     skip(subscriber, pool)
 )]
-pub async fn insert_subscriber(subscriber: NewSubscriber, pool: &PgPool) -> Result<(), sqlx::Error> {
+pub async fn insert_subscriber(subscriber: &NewSubscriber, pool: &PgPool) -> Result<(), sqlx::Error> {
     // Move out owned values so query bindings don't need references
     sqlx::query!(
         r#"
