@@ -48,9 +48,8 @@ async fn spawn_app() -> TestApp {
     let mut configuration = get_configuration().expect("Failed to read configuration.");
     configuration.database.database_name = Uuid::new_v4().to_string();
     let connection_pool = configure_database(&configuration.database).await;
-    // Include the scheme to build an absolute URL for reqwest
     let address = format!("http://127.0.0.1:{}", port);
-    let pool = PgPool::connect(&configuration.database.connection_string())
+    let pool = PgPool::connect_with(configuration.database.connection_options())
         .await
         .unwrap();
     let server =
@@ -66,14 +65,14 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         host: config.host.clone(),
         port: config.port,
     };
-    let mut connection = PgConnection::connect(&maintenance_settings.connection_string())
+    let mut connection = PgConnection::connect_with(&maintenance_settings.connection_options())
         .await
         .expect("Failed to connect to database.");
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
         .await
         .expect("Failed to create database");
-    let connection_pool = PgPool::connect(&config.connection_string())
+    let connection_pool = PgPool::connect_with(maintenance_settings.connection_options())
         .await
         .expect("Failed to connect to database after creating it.");
     sqlx::migrate!("./migrations")
