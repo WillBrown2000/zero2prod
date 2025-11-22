@@ -49,9 +49,8 @@ async fn spawn_app() -> TestApp {
     configuration.database.database_name = Uuid::new_v4().to_string();
     let connection_pool = configure_database(&configuration.database).await;
     let address = format!("http://127.0.0.1:{}", port);
-    let pool = PgPool::connect_with(configuration.database.connection_options())
-        .await
-        .unwrap();
+    // Reuse the same pool that has migrations applied
+    let pool = connection_pool.clone();
     let server =
         zero2prod::startup::run(listener, connection_pool.clone()).expect("failed to start server");
     tokio::spawn(server);
@@ -72,14 +71,16 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
         .await
         .expect("Failed to create database");
-    let connection_pool = PgPool::connect_with(maintenance_settings.connection_options())
+    // Connect to the newly created database
+    let pool = PgPool::connect_with(config.connection_options())
         .await
         .expect("Failed to connect to database after creating it.");
+    // Run migrations against the newly created database
     sqlx::migrate!("./migrations")
-        .run(&connection_pool)
+        .run(&pool)
         .await
         .expect("Failed to run migrations.");
-    connection_pool
+    pool
 }
 
 #[tokio::test]
