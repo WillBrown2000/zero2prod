@@ -2,7 +2,7 @@ FROM rust:1.80.1 AS builder
 
 WORKDIR /app
 
-RUN atp update && apt install lld clang -y
+RUN apt-get update && apt-get install -y lld clang
 COPY . .
 ENV SQLX_OFFLINE true
 RUN cargo build --release
@@ -17,12 +17,7 @@ RUN apt-get update -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt install lld clang -y
-COPY . .
-ENV SQLX_OFFLINE true
-RUN cargo build --release
-
 COPY --from=builder /app/target/release/zero2prod zero2prod
-COPY configuration configuration
+COPY src/configuration src/configuration
 ENV APP_ENVIRONMENT production
-ENTRYPOINT ["./target/release/zero2prod"]
+ENTRYPOINT ["./zero2prod"]
