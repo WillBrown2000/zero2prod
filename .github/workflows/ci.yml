@@ -157,7 +157,7 @@ jobs:
           --health-retries 10
     env:
       CARGO_TERM_COLOR: always
-      # Match configuration.yaml used by the app/tests
+      # Match base.yaml used by the app/tests
       DB_HOST: 127.0.0.1
       DB_PORT: 5432
       DB_USER: postgres

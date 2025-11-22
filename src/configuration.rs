@@ -1,7 +1,7 @@
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
-    pub application_port: u16,
+    pub application: ApplicationSettings,
 }
 #[derive(serde::Deserialize)]
 pub struct DatabaseSettings {
@@ -12,34 +12,59 @@ pub struct DatabaseSettings {
     pub database_name: String,
 }
 
-pub fn get_configuration() -> Result<Settings, config::ConfigError> {
-    use std::path::PathBuf;
-
-    // Try to load configuration.yaml from current working directory first
-    let cwd_path: PathBuf = std::env::current_dir()
-        .unwrap_or_else(|_| PathBuf::from("."))
-        .join("configuration.yaml");
-
-    // Fallback: load from the project root (compiled-in) if not found in CWD
-    let project_root_path: PathBuf =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("configuration.yaml");
-
-    let chosen_path = if cwd_path.exists() {
-        cwd_path
-    } else {
-        project_root_path
-    };
-
-    let builder = config::Config::builder()
-        .add_source(config::File::from(chosen_path).format(config::FileFormat::Yaml))
-        // Allow environment overrides using APP__X__Y style, e.g. APP__APPLICATION_PORT, APP__DATABASE__HOST
-        .add_source(config::Environment::with_prefix("APP").separator("__"));
-
-    let settings: Settings = builder.build()?.try_deserialize()?;
-
-    Ok(settings)
+#[derive(serde::Deserialize)]
+pub struct ApplicationSettings {
+    pub port: u16,
+    pub host: String,
 }
 
+pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+
+    let base_path = std::env::current_dir().expect("Failed to get current directory");
+    let configuration_directory = base_path.join("configuration");
+
+    let settings = config::Config::builder()
+        .add_source(config::File::with_name("base.yaml")
+        )
+        .build()?;
+    let environment = std::env::var("APP_ENVIRONMENT").unwrap_or_else(|_| "local"
+        .to_string()
+        .try_into()
+        .expect("Failed to convert APP_ENVIRONMENT to string"));
+
+    let environment_filename = format!("{}.yaml", environment.as_str());
+    let settings = config::Config::builder()
+        .add_source(config::File::from(configuration_directory.join("base.yaml"))
+        )
+        .add_source(config::File::from(configuration_directory.join(environment_filename))
+        ).build()?;
+
+    settings.try_deserialize::<Settings>()
+}
+pub enum Environment {
+    Local,
+    Production
+}
+
+impl Environment {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Environment::Production => "production",
+            Environment::Local => "local"
+        }
+    }
+}
+
+impl TryFrom<String> for Environment {
+    type Error = String;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        match value.to_lowercase().as_str() {
+            "production" => Ok(Self::Production),
+            "local" => Ok(Self::Local),
+            _ => Err(format!("Invalid environment: {}", value))
+        }
+    }
+}
 impl DatabaseSettings {
     pub fn connection_string(&self) -> String {
         format!(
