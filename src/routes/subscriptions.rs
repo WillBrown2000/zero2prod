@@ -23,20 +23,11 @@ pub async fn subscribe(
     form: Form<Subscription>,
     pool: web::Data<PgPool>
 ) -> HttpResponse {
-    let query_span = tracing::info_span!("Received subscription started...");
-    match sqlx::query!(
-        r#"
-    INSERT INTO subscriptions (id, email, name, subscribed_at)
-    VALUES ($1, $2, $3, $4)
-    "#,
-        Uuid::new_v4(),
-        form.email,
-        form.name,
-        Utc::now()
-    )
-        .execute(pool.get_ref())
-        .instrument(query_span)
-        .await
+    let new_subscriber = NewSubscriber {
+        name: SubscriberName::parse(form.name.clone()),
+        email: form.email.clone(),
+    };
+    match insert_subscriber(new_subscriber, &pool.get_ref()).await 
     {
         Ok(_) => {
             HttpResponse::Ok().finish()
@@ -63,7 +54,7 @@ pub async fn insert_subscriber(subscriber: NewSubscriber, pool: &PgPool) -> Resu
         "#,
         Uuid::new_v4(),
         subscriber.email,
-        subscriber.name.inner_ref(),
+        subscriber.name.as_ref(),
         Utc::now()
         )
         .execute(pool)

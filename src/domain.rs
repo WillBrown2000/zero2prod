@@ -44,8 +44,3 @@ impl NewSubscriber {
     }
 }
 
-impl SubscriberName {
-    pub fn inner_ref(&self) -> &str {
-        &self.0
-    }
-}
