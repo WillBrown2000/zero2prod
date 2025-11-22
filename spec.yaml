@@ -1,0 +1,17 @@
+name: zero2prod
+region: nyc
+services:
+  - name: web
+    source_dir: .
+    github:
+      repo: willbrown2000/zero2prod
+      branch: master
+      deploy_on_push: true
+    dockerfile_path: Dockerfile
+    http_port: 8000
+    health_check:
+      http_path: /health_check
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    routes:
+      - path: /
