@@ -63,6 +63,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         database_name: "postgres".to_string(),
         host: config.host.clone(),
         port: config.port,
+        require_ssl: false,
     };
     let mut connection = PgConnection::connect_with(&maintenance_settings.connection_options())
         .await
