@@ -3,6 +3,7 @@ use chrono::Utc;
 use sqlx::PgPool;
 use uuid::Uuid;
 use tracing::Instrument;
+use crate::domain::{NewSubscriber, SubscriberName};
 
 #[derive(serde::Deserialize)]
 pub struct Subscription {
@@ -53,8 +54,8 @@ pub async fn subscribe(
     name = "Adding a new subscriber",
     skip(subscriber, pool)
 )]
-pub async fn insert_subscriber(subscriber: &Subscription, pool: &PgPool) -> Result<(), sqlx::Error> {
-
+pub async fn insert_subscriber(subscriber: NewSubscriber, pool: &PgPool) -> Result<(), sqlx::Error> {
+    // Move out owned values so query bindings don't need references
     sqlx::query!(
         r#"
         INSERT INTO subscriptions (id, email, name, subscribed_at)
@@ -62,7 +63,7 @@ pub async fn insert_subscriber(subscriber: &Subscription, pool: &PgPool) -> Resu
         "#,
         Uuid::new_v4(),
         subscriber.email,
-        subscriber.name,
+        subscriber.name.inner_ref(),
         Utc::now()
         )
         .execute(pool)
