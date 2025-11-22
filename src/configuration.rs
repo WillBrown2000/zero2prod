@@ -21,23 +21,22 @@ pub struct ApplicationSettings {
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
 
     let base_path = std::env::current_dir().expect("Failed to get current directory");
-    let configuration_directory = base_path.join("configuration");
+    let configuration_directory = base_path.join("src/configuration");
 
-    let settings = config::Config::builder()
-        .add_source(config::File::with_name("base.yaml")
-        )
-        .build()?;
-    let environment = std::env::var("APP_ENVIRONMENT").unwrap_or_else(|_| "local"
-        .to_string()
+    // Determine the environment (defaults to Local when APP_ENVIRONMENT is not set)
+    let environment = std::env::var("APP_ENVIRONMENT")
+        .unwrap_or_else(|_| "local".to_string());
+    let environment: Environment = environment
         .try_into()
-        .expect("Failed to convert APP_ENVIRONMENT to string"));
+        .unwrap_or(Environment::Local);
 
     let environment_filename = format!("{}.yaml", environment.as_str());
+
+    // Build configuration from the files in src/configuration
     let settings = config::Config::builder()
-        .add_source(config::File::from(configuration_directory.join("base.yaml"))
-        )
-        .add_source(config::File::from(configuration_directory.join(environment_filename))
-        ).build()?;
+        .add_source(config::File::from(configuration_directory.join("base.yaml")))
+        .add_source(config::File::from(configuration_directory.join(environment_filename)))
+        .build()?;
 
     settings.try_deserialize::<Settings>()
 }
