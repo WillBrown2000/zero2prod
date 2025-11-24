@@ -1,5 +1,5 @@
 use serde_aux::field_attributes::deserialize_number_from_string;
-use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
+use sqlx::postgres::PgConnectOptions;
 use sqlx::postgres::PgSslMode;
 
 #[derive(serde::Deserialize)]
