@@ -3,6 +3,8 @@ use unicode_segmentation::UnicodeSegmentation;
 #[derive(Debug)]
 pub struct SubscriberName(String);
 
+
+
 impl SubscriberName {
     pub fn parse(s: String) -> Result<SubscriberName, String> {
         let is_empty_or_whitespace = s.trim().is_empty();
@@ -15,35 +17,14 @@ impl SubscriberName {
             Ok(Self(s))
         }
     }
-
-    // Consume the wrapper and return the inner String, useful when we want to
-    // pass owned data to downstream APIs (e.g., sqlx) without using references.
-    pub fn into_inner(self) -> String {
-        self.0
-    }
 }
 
-// Allow borrowing the inner string as &str (e.g., for SQLx bindings)
 impl AsRef<str> for SubscriberName {
     fn as_ref(&self) -> &str {
         &self.0
     }
 }
 
-pub struct NewSubscriber {
-    pub name: SubscriberName,
-    pub email: String,
-}
-
-impl NewSubscriber {
-    // Consume self and return owned primitives suitable for DB insertion
-    // without needing references in the query bindings.
-    pub fn into_parts(self) -> (String, String) {
-        let email = self.email;
-        let name = self.name.into_inner();
-        (email, name)
-    }
-}
 
 #[cfg(test)]
 mod tests {
