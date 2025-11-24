@@ -22,6 +22,7 @@ validator = "0.18"
 
 [dev-dependencies]
 claims = "0.7"
+fake = "2.9"
 
 [dependencies.sqlx]
 version ="0.8"
