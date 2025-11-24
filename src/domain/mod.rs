@@ -1,4 +1,4 @@
-mod subscriber_email;
+pub(crate) mod subscriber_email;
 mod subscriber_name;
 mod new_subscriber;
 pub use new_subscriber::NewSubscriber;
