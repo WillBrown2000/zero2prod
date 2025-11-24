@@ -23,8 +23,13 @@ pub async fn subscribe(
     form: Form<Subscription>,
     pool: web::Data<PgPool>
 ) -> HttpResponse {
+    let name = match SubscriberName::parse(form.0.name) {
+        Ok(name) => name,
+        Err(_) => return HttpResponse::BadRequest().finish(),
+    };
+    
     let new_subscriber = NewSubscriber {
-        name: SubscriberName::parse(form.0.name).expect("Name validation failed."),
+        name,
         email: form.0.email,
     };
     match insert_subscriber(&new_subscriber, &pool.get_ref()).await
@@ -35,7 +40,7 @@ pub async fn subscribe(
 
         Err(e) => {
             tracing::error!(" Failed to save subscription: {:?}", e);
-            HttpResponse::InternalServerError().body(e.to_string())
+            HttpResponse::InternalServerError().finish()
         },
     }
 
