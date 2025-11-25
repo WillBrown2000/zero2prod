@@ -8,6 +8,15 @@ pub struct EmailClient {
     base_url: String,
 }
 
+#[derive(serde::Serialize)]
+struct SendEmailRequest {
+    from: String,
+    to: String,
+    subject: String,
+    html_content: String,
+    text_content: String,
+}
+
 impl EmailClient {
     pub fn new(base_url: String, sender: SubscriberEmail, timeout: Duration) -> Self {
         let http_client = Client::builder()
@@ -28,8 +37,16 @@ impl EmailClient {
         html_content: &str,
         text_content: &str,
     ) -> Result<(), String> {
-        // Implementation will be added later
-        let _ = (recipient, subject, html_content, text_content);
+        let url = format!("{}/email", self.base_url);
+        let request_body = SendEmailRequest {
+            from: self.sender.as_ref().to_string(),
+            to: recipient.as_ref().to_string(),
+            subject: subject.to_string(),
+            html_content: html_content.to_string(),
+            text_content: text_content.to_string(),
+        };
+
+        let builder = self.http_client.post(&url).json(&request_body);
         Ok(())
     }
 }
