@@ -2,7 +2,9 @@ use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
+use zero2prod::email_client::EmailClient;
 use std::sync::LazyLock;
+use std::time::Duration;
 
 static TRACING: LazyLock<()> =  LazyLock::new(|| {
     let default_filter_level = "info".to_string();
@@ -51,8 +53,20 @@ async fn spawn_app() -> TestApp {
     let address = format!("http://127.0.0.1:{}", port);
     // Reuse the same pool that has migrations applied
     let pool = connection_pool.clone();
-    let server =
-        zero2prod::startup::run(listener, connection_pool.clone()).expect("failed to start server");
+
+    // Build an EmailClient for the server under test
+    let sender_email = configuration
+        .email_client
+        .sender()
+        .expect("Invalid sender email in configuration");
+    let email_client = EmailClient::new(
+        configuration.email_client.base_url.clone(),
+        sender_email,
+        Duration::from_millis(200),
+    );
+
+    let server = zero2prod::startup::run(listener, connection_pool.clone(), email_client)
+        .expect("failed to start server");
     tokio::spawn(server);
     TestApp { address, pool }
 }

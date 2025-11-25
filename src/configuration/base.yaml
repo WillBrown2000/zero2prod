@@ -7,3 +7,6 @@ database:
 application:
   port: 8000
   host: 127.0.0.1
+email_client:
+  sender_email: "will@boisebasinemail.com"
+  base_url: "localhost"

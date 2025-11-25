@@ -7,7 +7,6 @@ edition = "2021"
 config = "0.14"
 actix-web = "4"
 tokio = { version = "1.48.0", features = ["rt", "rt-multi-thread", "macros"] }
-reqwest = "0.12.24"
 serde = { version = "1.0.228", features = ["derive"] }
 uuid = { version = "1.18.1", features = ["v4"] }
 chrono = { version = "0.4.22", default-features = false, features = ["clock"]}
@@ -22,10 +21,16 @@ validator = "0.18"
 quickcheck_macros = "1.1.0"
 quickcheck = "1.0.3"
 rand = "0.8"
+configuration = "0.9.0"
 
 [dev-dependencies]
 claims = "0.7"
 fake = "2.9"
+
+[dependencies.reqwest]
+version = "0.12"
+default-features = false
+features = ["json", "rustls-tls"]
 
 [dependencies.sqlx]
 version ="0.8"
