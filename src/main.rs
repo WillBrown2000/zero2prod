@@ -29,6 +29,7 @@ async fn main() -> Result<(), std::io::Error> {
         configuration.email_client.base_url.clone(),
         sender_email,
         timeout,
+        configuration.email_client.authorization_string,
     );
 
     let pool = PgPool::connect_lazy_with(configuration.database.connection_options());

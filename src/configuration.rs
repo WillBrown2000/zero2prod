@@ -1,3 +1,4 @@
+use secrecy::SecretString;
 use serde_aux::field_attributes::deserialize_number_from_string;
 use sqlx::postgres::PgConnectOptions;
 use sqlx::postgres::PgSslMode;
@@ -14,6 +15,7 @@ pub struct Settings {
 pub struct EmailClientSettings {
     pub base_url: String,
     pub sender_email: String,
+    pub authorization_string: SecretString,
 }
 
 impl EmailClientSettings {
