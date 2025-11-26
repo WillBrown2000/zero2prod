@@ -63,6 +63,7 @@ async fn spawn_app() -> TestApp {
         configuration.email_client.base_url.clone(),
         sender_email,
         Duration::from_millis(200),
+        secrecy::SecretString::from("test_token"),
     );
 
     let server = zero2prod::startup::run(listener, connection_pool.clone(), email_client)

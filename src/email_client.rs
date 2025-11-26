@@ -49,7 +49,21 @@ impl EmailClient {
             text_content: text_content.to_string(),
         };
 
-        let _ = self.http_client.post(&url).json(&request_body);
+        let response = self
+            .http_client
+            .post(&url)
+            .json(&request_body)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to send email request: {}", e))?;
+
+        if !response.status().is_success() {
+            return Err(format!(
+                "Email API returned error status: {}",
+                response.status()
+            ));
+        }
+
         Ok(())
     }
 }
