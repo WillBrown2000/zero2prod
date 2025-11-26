@@ -100,7 +100,7 @@ mod tests {
         let email_client = EmailClient::new(
             mock_server.uri(),
             sender,
-            Duration::new(u64::MAX, 0),
+            Duration::new(10, 0),
             SecretString::new("secret".to_string().into_boxed_str()),
         );
 
@@ -129,7 +129,7 @@ mod tests {
         let email_client = EmailClient::new(
             mock_server.uri(),
             sender,
-            Duration::new(u64::MAX, 0),
+            Duration::new(10, 0),
             SecretString::new("secret".to_string().into_boxed_str()),
         );
 
@@ -142,6 +142,32 @@ mod tests {
         let subscriber_email = SubscriberEmail::parse(SafeEmail().fake()).unwrap();
         let subject: String = Sentence(10..20).fake();
         let content: String = Paragraph(1..10).fake();
+
+        let outcome = email_client
+            .send_email(subscriber_email, &subject, &content, &content).await;
+        assert_err!(outcome);
+    }
+    #[tokio::test]
+    async fn send_email_times_out_if_the_server_takes_too_long() {
+        let mock_server = MockServer::start().await;
+        let sender = SubscriberEmail::parse(SafeEmail().fake()).unwrap();
+        let email_client = EmailClient::new(
+            mock_server.uri(),
+            sender,
+            Duration::new(10, 0),
+            SecretString::new("secret".to_string().into_boxed_str()),
+        );
+
+
+        let subscriber_email = SubscriberEmail::parse(SafeEmail().fake()).unwrap();
+        let subject: String = Sentence(10..20).fake();
+        let content: String = Paragraph(1..10).fake();
+        let response = ResponseTemplate::new(200).set_delay(Duration::from_secs(180));
+        Mock::given(any())
+            .respond_with(response)
+            .expect(1)
+            .mount(&mock_server)
+            .await;
 
         let outcome = email_client
             .send_email(subscriber_email, &subject, &content, &content).await;
