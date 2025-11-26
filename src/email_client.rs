@@ -11,12 +11,13 @@ pub struct EmailClient {
 }
 
 #[derive(serde::Serialize)]
-struct SendEmailRequest {
-    from: String,
-    to: String,
-    subject: String,
-    html_content: String,
-    text_content: String,
+#[serde(rename_all = "PascalCase")]
+struct SendEmailRequest<'a> {
+    from: &'a str,
+    to: &'a str,
+    subject: &'a str,
+    html_body: &'a str,
+    text_body: &'a str,
 }
 
 impl EmailClient {
@@ -37,16 +38,16 @@ impl EmailClient {
         &self,
         recipient: SubscriberEmail,
         subject: &str,
-        html_content: &str,
-        text_content: &str,
+        html_body: &str,
+        text_body: &str,
     ) -> Result<(), reqwest::Error> {
         let url = format!("{}/email", self.base_url);
         let request_body = SendEmailRequest {
-            from: self.sender.as_ref().to_string(),
-            to: recipient.as_ref().to_string(),
-            subject: subject.to_string(),
-            html_content: html_content.to_string(),
-            text_content: text_content.to_string(),
+            from: self.sender.as_ref(),
+            to: recipient.as_ref(),
+            subject,
+            html_body: html_body,
+            text_body: text_body,
         };
 
         self
@@ -82,10 +83,10 @@ mod tests {
             let result: Result<serde_json::Value, _> = serde_json::from_slice(&request.body);
             if let Ok(body) = result {
                 dbg!(&body);
-                body.get("from").is_some()
-                && body.get("to").is_some()
-                && body.get("subject").is_some()
-                && body.get("html_content").is_some()
+                body.get("From").is_some()
+                && body.get("To").is_some()
+                && body.get("Subject").is_some()
+                && body.get("HtmlBody").is_some()
             } else {
                 false
             }
