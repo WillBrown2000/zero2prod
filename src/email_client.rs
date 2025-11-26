@@ -59,7 +59,8 @@ impl EmailClient {
             )
             .json(&request_body)
             .send()
-            .await?;
+            .await?
+            .error_for_status_ref()?;
         Ok(())
     }
 }
@@ -67,13 +68,14 @@ impl EmailClient {
 #[cfg(test)]
 mod tests {
     use std::time::Duration;
+    use claims::assert_err;
     use crate::domain::SubscriberEmail;
     use crate::email_client::EmailClient;
     use fake::faker::internet::en::SafeEmail;
     use fake::faker::lorem::en::{Paragraph, Sentence};
     use fake::Fake;
     use secrecy::SecretString;
-    use wiremock::matchers::{header, header_exists, method, path};
+    use wiremock::matchers::{any, header, header_exists, method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     struct SendEmailBodyMatcher;
@@ -82,7 +84,6 @@ mod tests {
         fn matches(&self, request: &wiremock::Request) -> bool {
             let result: Result<serde_json::Value, _> = serde_json::from_slice(&request.body);
             if let Ok(body) = result {
-                dbg!(&body);
                 body.get("From").is_some()
                 && body.get("To").is_some()
                 && body.get("Subject").is_some()
@@ -93,7 +94,7 @@ mod tests {
         }
     }
     #[tokio::test]
-    async fn send_email_fires_a_request_to_base_url() {
+    async fn send_email_succeeds_if_the_server_returns_200() {
         let mock_server = MockServer::start().await;
         let sender = SubscriberEmail::parse(SafeEmail().fake()).unwrap();
         let email_client = EmailClient::new(
@@ -120,5 +121,30 @@ mod tests {
         let _ = email_client
             .send_email(subscriber_email, &subject, &content, &content).await;
 
+    }
+    #[tokio::test]
+    async fn send_email_fails_if_the_server_returns_500() {
+        let mock_server = MockServer::start().await;
+        let sender = SubscriberEmail::parse(SafeEmail().fake()).unwrap();
+        let email_client = EmailClient::new(
+            mock_server.uri(),
+            sender,
+            Duration::new(u64::MAX, 0),
+            SecretString::new("secret".to_string().into_boxed_str()),
+        );
+
+        Mock::given(any())
+            .respond_with(ResponseTemplate::new(500).set_body_string("Internal Server Error"))
+            .expect(1)
+            .mount(&mock_server)
+            .await;
+
+        let subscriber_email = SubscriberEmail::parse(SafeEmail().fake()).unwrap();
+        let subject: String = Sentence(10..20).fake();
+        let content: String = Paragraph(1..10).fake();
+
+        let outcome = email_client
+            .send_email(subscriber_email, &subject, &content, &content).await;
+        assert_err!(outcome);
     }
 }
