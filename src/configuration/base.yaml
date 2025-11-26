@@ -10,3 +10,4 @@ application:
 email_client:
   sender_email: "will@boisebasinemail.com"
   base_url: "localhost"
+  authorization_token: "secret"

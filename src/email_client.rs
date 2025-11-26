@@ -1,7 +1,7 @@
 use crate::domain::subscriber_email::SubscriberEmail;
 use reqwest::Client;
 use std::time::Duration;
-use secrecy::SecretString;
+use secrecy::{ExposeSecret, SecretString};
 
 pub struct EmailClient {
     sender: SubscriberEmail,
@@ -39,7 +39,7 @@ impl EmailClient {
         subject: &str,
         html_content: &str,
         text_content: &str,
-    ) -> Result<(), String> {
+    ) -> Result<(), reqwest::Error> {
         let url = format!("{}/email", self.base_url);
         let request_body = SendEmailRequest {
             from: self.sender.as_ref().to_string(),
@@ -49,21 +49,16 @@ impl EmailClient {
             text_content: text_content.to_string(),
         };
 
-        let response = self
+        self
             .http_client
             .post(&url)
+            .header(
+                "X-Postmark-Server-Token",
+                self.authorization_token.expose_secret().to_string(),
+            )
             .json(&request_body)
             .send()
-            .await
-            .map_err(|e| format!("Failed to send email request: {}", e))?;
-
-        if !response.status().is_success() {
-            return Err(format!(
-                "Email API returned error status: {}",
-                response.status()
-            ));
-        }
-
+            .await?;
         Ok(())
     }
 }
