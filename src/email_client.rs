@@ -72,8 +72,8 @@ mod tests {
     use crate::domain::SubscriberEmail;
     use crate::email_client::EmailClient;
     use fake::faker::internet::en::SafeEmail;
-    use fake::faker::lorem::en::{Paragraph, Sentence};
-    use fake::Fake;
+    use fake::faker::lorem::en::{Paragraph, Sentence, Word};
+    use fake::{Fake, Faker};
     use secrecy::SecretString;
     use wiremock::matchers::{any, header, header_exists, method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
@@ -92,6 +92,26 @@ mod tests {
                 false
             }
         }
+    }
+
+    fn subject() -> String {
+        Sentence(1..2).fake()
+    }
+
+    fn content() -> String {
+        Paragraph(1..10).fake()
+    }
+
+    fn email() -> SubscriberEmail {
+        SubscriberEmail::parse(SafeEmail().fake()).unwrap()
+    }
+
+    fn email_client(base_url: String) -> EmailClient {
+        EmailClient::new(base_url,
+            email(),
+            Duration::new(10, 0),
+            SecretString::new("secret".to_string().into_boxed_str()),
+        )
     }
     #[tokio::test]
     async fn send_email_succeeds_if_the_server_returns_200() {
