@@ -5,6 +5,8 @@ use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
 use crate::email_client::EmailClient;
+use crate::configuration::Settings;
+use sqlx::postgres::{ PgPoolOptions};
 
 pub fn run(
     tcp_listener: TcpListener,
@@ -26,3 +28,16 @@ pub fn run(
     .run();
     Ok(server)
 }
+
+pub fn build(configuration: Settings) -> Result<Server, std::io::Error> {
+    let connection_pool = PgPoolOptions::new().connect_lazy_with(configuration.database.connection_options());
+    
+    let sender_email = configuration.email_client.sender().expect("Invalid sender email in configuration");
+    let timeout = configuration.email_client.timeout;
+    let email_client = EmailClient::new(configuration.email_client.base_url, sender_email, timeout, configuration.email_client.authorization_token);
+    let address = format!("{}:{}", configuration.application.host, configuration.application.port);
+    let listener = TcpListener::bind(address)?;
+    run(std::net::TcpListener::bind(format!("{}:{}", configuration.application.host, configuration.application.port))?, connection_pool, email_client)
+}
+
+
