@@ -72,8 +72,8 @@ mod tests {
     use crate::domain::SubscriberEmail;
     use crate::email_client::EmailClient;
     use fake::faker::internet::en::SafeEmail;
-    use fake::faker::lorem::en::{Paragraph, Sentence, Word};
-    use fake::{Fake, Faker};
+    use fake::faker::lorem::en::{Paragraph, Sentence};
+    use fake::{Fake};
     use secrecy::SecretString;
     use wiremock::matchers::{any, header, header_exists, method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};

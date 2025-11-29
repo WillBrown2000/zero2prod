@@ -1,8 +1,7 @@
 use actix_web::{web, web::Form, HttpResponse};
-use chrono::Utc;
 use sqlx::PgPool;
-use uuid::Uuid;
 use tracing;
+use uuid::Uuid;
 use crate::domain::{NewSubscriber, SubscriberName};
 use crate::domain::subscriber_email::SubscriberEmail;
 
@@ -68,7 +67,7 @@ pub async fn insert_subscriber(subscriber: &NewSubscriber, pool: &PgPool) -> Res
         Uuid::new_v4(),
         subscriber.email.as_ref(),
         subscriber.name.as_ref(),
-        Utc::now()
+        chrono::Utc::now()
         )
         .execute(pool)
         .await
