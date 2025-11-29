@@ -10,7 +10,17 @@ pub struct TestApp {
     pub pool: PgPool,
 }
 
-
+impl TestApp {
+    pub async fn post_subscription(&self, body: String) -> reqwest::Response {
+        reqwest::Client::new()
+            .post(&format!("{}/subscriptions", &self.address))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(body)
+            .send()
+            .await
+            .expect("Failed to execute request")
+    }
+}
 pub async fn spawn_app() -> TestApp {
     let configuration = {
         let mut c = get_configuration().expect("Failed to read configuration.");
