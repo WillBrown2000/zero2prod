@@ -1,3 +1,5 @@
+use crate::helpers::spawn_app;
+
 #[tokio::test]
 async fn test_health_check() {
     let app = spawn_app().await;
