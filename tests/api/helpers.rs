@@ -1,52 +1,32 @@
-use std::net::TcpListener;
-use std::time::Duration;
-
-use sqlx::{Connection, Executor, PgConnection, PgPool};
 use sqlx::postgres::{PgConnectOptions, PgSslMode};
+use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
-use zero2prod::email_client::EmailClient;
-use zero2prod::startup::run;
+use zero2prod::startup::{get_connection_pool, Application};
 
 pub struct TestApp {
     pub address: String,
     pub pool: PgPool,
 }
 
+
 pub async fn spawn_app() -> TestApp {
-    // Load configuration and randomize the database name to ensure test isolation
-    let mut configuration = get_configuration().expect("Failed to read configuration");
-    configuration.database.database_name = Uuid::new_v4().to_string();
-
-    // Configure and migrate the database
-    let pool = configure_database(&configuration.database).await;
-
-    // Bind the application to a random available port
-    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
-    let port = listener.local_addr().unwrap().port();
-    let address = format!("http://127.0.0.1:{}", port);
-
-    // Build the EmailClient from configuration
-    let email_settings = configuration.email_client;
-    let sender = email_settings.sender().expect("Invalid sender email in configuration");
-    let base_url = if email_settings.base_url.starts_with("http") {
-        email_settings.base_url
-    } else {
-        format!("http://{}", email_settings.base_url)
+    let configuration = {
+        let mut c = get_configuration().expect("Failed to read configuration.");
+        c.database.database_name = Uuid::new_v4().to_string();
+        c.application.port = 0;
+        c
     };
-    let email_client = EmailClient::new(
-        base_url,
-        sender,
-        Duration::from_secs(10),
-        email_settings.authorization_token,
-    );
+    let address = format!("{}:{}", configuration.application.host, configuration.application.port);
+    let application = Application::build(configuration.clone()).await.unwrap();
+    configure_database(&configuration.database).await;
+    let _ = tokio::spawn(application.run_until_stopped());
 
-    // Launch the application as a background task
-    let server = run(listener, pool.clone(), email_client).expect("Failed to bind address");
-    tokio::spawn(server);
-
-    TestApp { address, pool }
+    TestApp {
+        address,
+        pool: get_connection_pool(&configuration.database)
+    }
 }
 
 async fn configure_database(config: &DatabaseSettings) -> PgPool {
