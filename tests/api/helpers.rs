@@ -15,17 +15,25 @@ pub async fn spawn_app() -> TestApp {
     let configuration = {
         let mut c = get_configuration().expect("Failed to read configuration.");
         c.database.database_name = Uuid::new_v4().to_string();
+        // Ask OS for an available port
         c.application.port = 0;
         c
     };
-    let address = format!("{}:{}", configuration.application.host, configuration.application.port);
+
+    // Build the application first to learn which port was actually bound
     let application = Application::build(configuration.clone()).await.unwrap();
+    // Run DB migrations before we start serving requests
     configure_database(&configuration.database).await;
+
+    // Compose a valid absolute URL that reqwest can use
+    let address = format!("http://{}:{}", configuration.application.host, application.port());
+
+    // Launch the server in the background
     let _ = tokio::spawn(application.run_until_stopped());
 
     TestApp {
         address,
-        pool: get_connection_pool(&configuration.database)
+        pool: get_connection_pool(&configuration.database),
     }
 }
 

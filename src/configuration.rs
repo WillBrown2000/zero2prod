@@ -1,8 +1,10 @@
+use std::time::Duration;
 use secrecy::SecretString;
 use serde_aux::field_attributes::deserialize_number_from_string;
 use sqlx::postgres::PgConnectOptions;
 use sqlx::postgres::PgSslMode;
 use crate::domain::subscriber_email::SubscriberEmail;
+use serde_with::{serde_as, DurationSeconds};
 
 #[derive(serde::Deserialize)]
 #[derive(Clone)]
@@ -12,12 +14,14 @@ pub struct Settings {
     pub email_client: EmailClientSettings,
 }
 
+#[serde_as]
 #[derive(serde::Deserialize, Clone)]
 pub struct EmailClientSettings {
     pub base_url: String,
     pub sender_email: String,
     pub authorization_token : SecretString,
-    pub timeout: std::time::Duration
+    #[serde_as(as = "DurationSeconds<u64>")]
+    pub timeout: Duration,
 }
 
 
