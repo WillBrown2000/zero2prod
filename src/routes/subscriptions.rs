@@ -61,13 +61,13 @@ pub async fn insert_subscriber(subscriber: &NewSubscriber, pool: &PgPool) -> Res
     // Move out owned values so query bindings don't need references
     sqlx::query!(
         r#"
-        INSERT INTO subscriptions (id, email, name, subscribed_at)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO subscriptions (id, email, name, subscribed_at, status)
+        VALUES ($1, $2, $3, $4, 'confirmed')
         "#,
         Uuid::new_v4(),
         subscriber.email.as_ref(),
         subscriber.name.as_ref(),
-        chrono::Utc::now()
+        chrono::Utc::now(),
         )
         .execute(pool)
         .await

@@ -1,10 +1,26 @@
 use crate::helpers::spawn_app;
+use wiremock::matchers::method;
+use wiremock::{Mock, ResponseTemplate};
 
+
+#[tokio::test]
+async fn subscribe_sends_a_confirmation_email_for_valid_data(){
+    let app = spawn_app().await;
+    let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
+    let client = reqwest::Client::new();
+    Mock::given(method("POST"))
+        .respond_with(ResponseTemplate::new(200))
+        .expect(1)
+        .mount(&app.email_server)
+        .await;
+    let response = client.post(&format!("{}/subscriptions", &app.address)).form(&body).send().await;
+    // assert_eq!(response.status(), 200);
+}
 #[tokio::test]
 async fn subscribe_returns_a_200_for_valid_form_data() {
     let app = spawn_app().await;
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
-    let client = reqwest::Client::new();
+    let _client = reqwest::Client::new();
 
     let response = app.post_subscription(body.to_string()).await;
     assert_eq!(response.status().as_u16(), 200);
@@ -21,7 +37,6 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
 #[tokio::test]
 async fn subscribe_returns_a_400_when_data_is_missing() {
     let app = spawn_app().await;
-    let client = reqwest::Client::new();
     let test_cases = vec![
         ("name=le%20guin", "missing email"),
         ("email=ursula_le_guin%40gmail.com", "missing name"),
@@ -40,7 +55,6 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
 #[tokio::test]
 async fn subscribe_returns_a_400_when_fields_are_present_but_invalid() {
     let app = spawn_app().await;
-    let client = reqwest::Client::new();
     let test_cases = vec![
         ("name=&email=ursula_le_guin%40gmail.com", "empty name"),
         ("name=Ursula&email", "empty email"),
