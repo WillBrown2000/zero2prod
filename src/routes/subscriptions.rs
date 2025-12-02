@@ -22,7 +22,7 @@ impl TryFrom<Subscription> for NewSubscriber {
 }
 #[tracing::instrument(
     name = "Adding a new subscriber",
-    skip(form, pool),
+    skip(form, pool, email_client),
     fields(
         subscriber_email = %form.email,
         subscriber_name = %form.name
@@ -30,7 +30,8 @@ impl TryFrom<Subscription> for NewSubscriber {
 )]
 pub async fn subscribe(
     form: Form<Subscription>,
-    pool: web::Data<PgPool>
+    pool: web::Data<PgPool>,
+    email_client: web::Data<crate::email_client::EmailClient>
 ) -> HttpResponse {
 
     let new_subscriber = match form.0.try_into()
@@ -39,17 +40,34 @@ pub async fn subscribe(
         Err(_) => return HttpResponse::BadRequest().finish()
     };
 
-    match insert_subscriber(&new_subscriber, &pool.get_ref()).await
-    {
-        Ok(_) => {
-            HttpResponse::Ok().finish()
-        },
-
-        Err(e) => {
-            tracing::error!(" Failed to save subscription: {:?}", e);
-            HttpResponse::InternalServerError().finish()
-        },
+    if insert_subscriber(&new_subscriber, &pool.get_ref()).await.is_err() {
+        return HttpResponse::InternalServerError().finish();
     }
+
+    // Include a confirmation link in both the HTML and text bodies
+    let confirmation_link = "http://localhost/subscriptions/confirm";
+    let html_body = format!(
+        "Welcome to our newsletter!<br/>Click <a href=\"{0}\">here</a> to confirm your subscription.",
+        confirmation_link
+    );
+    let text_body = format!(
+        "Welcome to our newsletter!\nVisit {0} to confirm your subscription.",
+        confirmation_link
+    );
+
+    if email_client
+        .send_email(
+            new_subscriber.email,
+            "Welcome!",
+            &html_body,
+            &text_body,
+        )
+        .await
+        .is_err()
+    {
+        return HttpResponse::InternalServerError().finish();
+    }
+    HttpResponse::Ok().finish()
 
 }
 
